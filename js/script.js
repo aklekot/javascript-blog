@@ -2,15 +2,12 @@
 
 function titleClickHandler(event) {
   event.preventDefault();
-  console.log('Link was clicked!');
   const clickedElement = this;
-  console.log('clickedElement (with plus): ' + clickedElement);
   /* remove class 'active' from all article links  */
   const activeLinks = document.querySelectorAll('.titles a.active');
 
   for (let activeLink of activeLinks) {
     activeLink.classList.remove('active');
-    console.log("Removed");
   }
 
   /* remove class 'active' from all articles */
@@ -18,24 +15,19 @@ function titleClickHandler(event) {
 
   for (let activeArticle of activeArticles) {
     activeArticle.classList.remove('active');
-    console.log("Article - Removed");
   }
 
   /* get 'href' attribute from the clicked link */
   const articleSelector = clickedElement.getAttribute('href');
-  console.log('Selector artykułu: ' + articleSelector);
 
   /* find the correct article using the selector (value of 'href' attribute) */
   const targetArticle = document.querySelector(articleSelector);
 
   /*add class 'active' to the clicked link */
   targetArticle.classList.add('active');
-  console.log("Dodano klasę active do artykułu");
 
   /* add class 'active' to the correct article */
   clickedElement.classList.add('active');
-  console.log("Added active class to the target article");
-
 }
 
 const optArticleSelector = '.post',
@@ -44,11 +36,9 @@ const optArticleSelector = '.post',
 
 function generateTitleLinks() {
   console.log("Generating title links");
-
-  /* find the titleList element */
   const titleList = document.querySelector(optTitleListSelector);
 
-  /* remove contents of titleList */
+  /* remove text in titleList */
   titleList.innerHTML = '';
 
   /* find all the articles */
@@ -61,17 +51,10 @@ function generateTitleLinks() {
     const articleTitle = article.querySelector(optTitleSelector).innerHTML;
     const linkHTML = `<li><a href="#${articleId}"><span>${articleTitle}</span></a></li>`;
 
-    /* insert link into html variable */
     html += linkHTML;
   }
 
   titleList.innerHTML = html;
-
-  /* add event listeners to each link */
-  const links = document.querySelectorAll('.titles a');
-  for (let link of links) {
-    link.addEventListener('click', titleClickHandler);
-  }
 }
 
 
@@ -83,3 +66,31 @@ const links = document.querySelectorAll('.titles a');
 for (let link of links) {
   link.addEventListener('click', titleClickHandler);
 }
+
+function generateTags() {
+  /* find all articles */
+
+  /* START LOOP: for every article: */
+
+  /* find tags wrapper */
+
+  /* make html variable with empty string */
+
+  /* get tags from data-tags attribute */
+
+  /* split tags into array */
+
+  /* START LOOP: for each tag */
+
+  /* generate HTML of the link */
+
+  /* add generated code to html variable */
+
+  /* END LOOP: for each tag */
+
+  /* insert HTML of all the links into the tags wrapper */
+
+  /* END LOOP: for every article: */
+}
+
+generateTags();
