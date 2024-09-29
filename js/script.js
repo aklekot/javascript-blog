@@ -1,9 +1,17 @@
 'use strict';
 
+const templates = {
+  articleLink: Handlebars.compile(document.querySelector('#template-article-link').innerHTML),
+  tagLink: Handlebars.compile(document.querySelector('#template-tag-link').innerHTML),
+  authorLink: Handlebars.compile(document.querySelector('#template-author-link').innerHTML),
+  tagCloudLink: Handlebars.compile(document.querySelector('#template-tag-cloud-link').innerHTML)
+};
+
 function titleClickHandler(event) {
   event.preventDefault();
   const clickedElement = this;
   /* remove class 'active' from all article links  */
+
   const activeLinks = document.querySelectorAll('.titles a.active');
 
   for (let activeLink of activeLinks) {
@@ -35,18 +43,15 @@ const optArticleSelector = '.post',
 
 function generateTitleLinks(customSelector = '') {
   const titleList = document.querySelector(optTitleListSelector);
-
   titleList.innerHTML = '';
-
   const articles = document.querySelectorAll(optArticleSelector + customSelector);
-
   let html = '';
 
   for (let article of articles) {
     const articleId = article.getAttribute('id');
     const articleTitle = article.querySelector(optTitleSelector).innerHTML;
-    const linkHTML = `<li><a href="#${articleId}"><span>${articleTitle}</span></a></li>`;
-
+    const linkHTMLData = { id: articleId, title: articleTitle };
+    const linkHTML = templates.articleLink(linkHTMLData);
     html += linkHTML;
   }
 
@@ -84,6 +89,7 @@ function calculateTagClass(count, params) {
 function generateTags() {
   let allTags = {};
   const articles = document.querySelectorAll(optArticleSelector);
+  let allTagsHTML = '';
 
   for (let article of articles) {
     const tagsWrapper = article.querySelector(optArticleTagsSelector);
@@ -97,37 +103,30 @@ function generateTags() {
       } else {
         allTags[tag]++;
       }
-    }
-  }
 
-  const tagsParams = calculateTagsParams(allTags);
-  console.log('tagsParams:', tagsParams);
-
-  for (let article of articles) {
-    const tagsWrapper = article.querySelector(optArticleTagsSelector);
-    let html = '';
-    const articleTags = article.getAttribute('data-tags');
-    const articleTagsArray = articleTags.split(' ');
-
-    for (let tag of articleTagsArray) {
-      const tagLinkHTML = '<li><a href="#tag-' + tag + '" class="' + calculateTagClass(allTags[tag], tagsParams) + '">' + tag + '</a></li>';
+      const tagLinkHTMLData = { tagId: 'tag-' + tag, tagName: tag };
+      const tagLinkHTML = templates.tagLink(tagLinkHTMLData);
       html += tagLinkHTML;
     }
+
     tagsWrapper.innerHTML = html;
   }
 
-  const tagList = document.querySelector(optTagsListSelector);
-  let allTagsHTML = '';
+  const tagsParams = calculateTagsParams(allTags);
 
   for (let tag in allTags) {
-    const tagLinkHTML = '<li><a href="#tag-' + tag + '" class="' + calculateTagClass(allTags[tag], tagsParams) + '">' + tag + '</a></li>';
-    allTagsHTML += tagLinkHTML;
+    const tagLinkHTMLData = { tagId: 'tag-' + tag, tagName: tag };
+    const tagLinkHTML = templates.tagLink(tagLinkHTMLData);
+    const tagClass = calculateTagClass(allTags[tag], tagsParams);
+    allTagsHTML += `<li><a href="#${tagLinkHTMLData.tagId}" class="${tagClass}">${tagLinkHTMLData.tagName}</a></li>`;
   }
 
+  const tagList = document.querySelector(optTagsListSelector);
   if (tagList) {
     tagList.innerHTML = allTagsHTML;
   }
 }
+
 generateTags();
 
 function tagClickHandler(event) {
@@ -160,7 +159,9 @@ function generateAuthors() {
     const autohrWrapper = article.querySelector(optArticleAuthorSelector);
     let html = '';
     const articleAuthor = article.getAttribute('data-author');
-    const authorLinkHTML = `<li><a href="#author-${articleAuthor}">${articleAuthor}</a></li>`;
+    const authorLinkHTMLData = { id: articleAuthor, authorName: articleAuthor };
+    const authorLinkHTML = templates.authorLink(authorLinkHTMLData);
+
     html += authorLinkHTML;
 
     // Sprawdzanie, czy autor istnieje w allAuthors, jeśli nie, inicjalizujemy, w przeciwnym zwiększamy licznik
@@ -175,7 +176,7 @@ function generateAuthors() {
   let allAuthorsHTML = '';
 
   for (let author in allAuthors) {
-    // Generowanie  dodanie do liczby wystąpień w artykułach
+    //Dodanie do linku liczby wystąpień w artykułach
     const authorLinkHTML = `<li><a href="#author-${author}">${author} (${allAuthors[author]})</a></li>`;
     allAuthorsHTML += authorLinkHTML;
   }
