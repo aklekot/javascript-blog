@@ -113,17 +113,20 @@ function generateTags() {
   }
 
   const tagsParams = calculateTagsParams(allTags);
+  const allTagsArray = [];
 
   for (let tag in allTags) {
-    const tagLinkHTMLData = { tagId: 'tag-' + tag, tagName: tag };
-    const tagLinkHTML = templates.tagLink(tagLinkHTMLData);
+   // const tagLinkHTMLData = { tagId: 'tag-' + tag, tagName: tag };
+   // const tagLinkHTML = templates.tagLink(tagLinkHTMLData);
     const tagClass = calculateTagClass(allTags[tag], tagsParams);
-    allTagsHTML += `<li><a href="#${tagLinkHTMLData.tagId}" class="${tagClass}">${tagLinkHTMLData.tagName}</a></li>`;
+    //allTagsHTML += `<li><a href="#${tagLinkHTMLData.tagId}" class="${tagClass}">${tagLinkHTMLData.tagName}</a></li>`;
   }
 
   const tagList = document.querySelector(optTagsListSelector);
   if (tagList) {
-    tagList.innerHTML = allTagsHTML;
+    //tagList.innerHTML = allTagsHTML;
+    const tagCloudHTML = templates.tagCloudLink({ tags: allTagsArray });
+    tagList.innerHTML = tagCloudHTML;
   }
 }
 
